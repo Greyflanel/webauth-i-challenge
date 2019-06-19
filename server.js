@@ -69,6 +69,7 @@ server.post('/api/register', (req, res) => {
       .first()
       .then(user => {
         if (user && bcrypt.compareSync(password, user.password)) {
+          req.session.user =  user 
           res.status(200).json({ message: `Welcome ${user.username}!` });
         } else {
           res.status(401).json({ message: 'Invalid Credentials' });
@@ -88,7 +89,7 @@ server.post('/api/register', (req, res) => {
       .catch(error => res.send(error));
   });
   
-  server.get('/logout', (req, res) => {
+  server.get('/api/logout', (req, res) => {
     if(req.session) {
       req.session.destroy(error => {
         if(error) {
